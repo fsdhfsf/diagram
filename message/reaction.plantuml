@@ -1,0 +1,72 @@
+@startuml
+
+actor User as "User"
+boundary chatExtenstionCodeServerUI as "chatExtenstionCodeServerUI"
+control ReactionController as "reactionController"
+entity ReactionStore as "reaction"
+
+activate User
+User -> chatExtenstionCodeServerUI: Thêm reaction
+activate chatExtenstionCodeServerUI
+chatExtenstionCodeServerUI -> ReactionController:API  addReaction
+activate ReactionController
+ReactionController -> ReactionStore: saveReaction
+activate ReactionStore
+
+alt Lưu reaction thành công
+    ReactionStore --> ReactionController: Success
+    ReactionController --> chatExtenstionCodeServerUI: response
+    chatExtenstionCodeServerUI --> User: hiển thị reaction
+else Lưu reaction thất bại
+    ReactionStore --> ReactionController: errorr
+    ReactionController --> chatExtenstionCodeServerUI: Lỗi
+    chatExtenstionCodeServerUI --> User: Lỗi
+end
+deactivate ReactionStore
+
+
+deactivate ReactionController
+
+chatExtenstionCodeServerUI -> User: Hiển thị reaction
+deactivate chatExtenstionCodeServerUI
+
+
+    User -> chatExtenstionCodeServerUI: Xóa reaction
+    activate chatExtenstionCodeServerUI
+
+    chatExtenstionCodeServerUI -> ReactionController: Xóa reaction
+    deactivate chatExtenstionCodeServerUI
+    activate ReactionController
+    ReactionController -> ReactionStore: Xóa reaction
+    deactivate ReactionController
+    activate ReactionStore
+
+    alt Xóa reaction thành công
+
+        ReactionStore --> ReactionController: Success
+        deactivate ReactionStore
+        activate ReactionController
+        ReactionController --> chatExtenstionCodeServerUI: Success
+        deactivate ReactionController
+        activate chatExtenstionCodeServerUI
+        chatExtenstionCodeServerUI --> User: Xóa reaction thành công
+        deactivate chatExtenstionCodeServerUI
+
+    else Xóa reaction thất bại
+        activate ReactionStore
+        ReactionStore --> ReactionController: Lỗi
+        deactivate ReactionStore
+        activate ReactionController
+        ReactionController --> chatExtenstionCodeServerUI: Lỗi
+        deactivate ReactionController
+        activate chatExtenstionCodeServerUI
+        chatExtenstionCodeServerUI --> User: thông báo Lỗi
+        deactivate chatExtenstionCodeServerUI
+    end
+    deactivate ReactionStore
+
+    deactivate ReactionController
+    deactivate chatExtenstionCodeServerUI
+
+
+@enduml

@@ -1,0 +1,59 @@
+@startuml
+    actor User
+    boundary codeServerChatExtenstionView
+    control chatSocket
+    control chatController
+    entity ChatModel
+    activate User
+
+    alt Successful Case
+            User-->>codeServerChatExtenstionView: send message
+            activate codeServerChatExtenstionView
+            codeServerChatExtenstionView->>chatSocket: emit message
+                activate chatSocket
+                deactivate codeServerChatExtenstionView
+            chatSocket->>chatController: send message
+                activate chatController
+                deactivate chatSocket
+            chatController->>ChatModel: SaveMessage()
+                activate ChatModel
+                deactivate chatController
+            ChatModel-->>chatController: gửi thông báo thành công
+                activate chatController
+                deactivate ChatModel
+            chatController-->>chatSocket: gửi thông báo thành công
+                activate chatSocket
+                deactivate chatController
+            chatSocket-->>codeServerChatExtenstionView: gửi thông báo thành công
+                activate codeServerChatExtenstionView
+                deactivate chatSocket
+            codeServerChatExtenstionView->>User: hiển thị
+                deactivate codeServerChatExtenstionView
+    else Exception Case: SaveMessage Failure
+            User-->>codeServerChatExtenstionView: send message
+            activate codeServerChatExtenstionView
+            codeServerChatExtenstionView->>chatSocket: emit message
+            activate chatSocket
+                deactivate codeServerChatExtenstionView
+            chatSocket->>chatController: send message
+                activate chatController
+                        deactivate chatSocket
+            chatController->>ChatModel: SaveMessage()
+            activate ChatModel
+                deactivate chatController
+            ChatModel-->>chatController: failed
+                activate chatController
+                        deactivate ChatModel
+            chatController-->>chatSocket: failed
+                activate chatSocket
+                        deactivate chatController
+            chatSocket-->>codeServerChatExtenstionView: failed
+                activate codeServerChatExtenstionView
+                        deactivate chatSocket
+            codeServerChatExtenstionView->>User: hien thi loi
+                deactivate codeServerChatExtenstionView
+    end
+@enduml
+
+
+    

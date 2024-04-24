@@ -1,0 +1,41 @@
+@startuml
+    Actor User
+    boundary codeServerExtenstionView
+    control chatSocket
+    control chatController
+    entity chatModel
+    activate User
+
+    User->>codeServerExtenstionView: Yêu cầu xóa tin nhắn
+    activate codeServerExtenstionView
+    codeServerExtenstionView->>chatController: Yêu cầu xóa tin nhắn
+    deactivate codeServerExtenstionView
+    activate chatController
+    chatController->>chatModel: XoaTinNhan()
+    activate chatModel
+    alt Trường hợp thành công
+        chatModel-->>chatController: TinNhanDaXoa
+        deactivate chatModel
+        chatController-->>chatSocket: Phát tin nhắn xóa
+        deactivate chatController
+        activate chatSocket
+        chatSocket-->>codeServerExtenstionView: Tin nhắn đã xóa
+        activate codeServerExtenstionView
+        deactivate chatSocket
+        codeServerExtenstionView->>User: Hiển thị xóa tin nhắn
+
+        deactivate codeServerExtenstionView
+    else Trường hợp lỗi: XoaTinNhan ThatBai
+        activate chatModel
+        chatModel-->>chatController: Không thể xóa tin nhắn
+        deactivate chatModel
+        activate chatController
+        chatController-->>codeServerExtenstionView: HienThiLoi()
+        deactivate chatController
+        activate codeServerExtenstionView
+
+        codeServerExtenstionView->>User: Hiển thị lỗi
+
+        deactivate codeServerExtenstionView
+    end
+    @enduml

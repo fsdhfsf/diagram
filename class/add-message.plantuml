@@ -1,0 +1,29 @@
+@startuml
+
+
+class codeServerChatExtenstionView   <<boundary>>  {
+    +emitMessage()
+    +showMessage()
+    +showError()
+}
+
+class chatSocket <<control>> {
+    +sendMessage()
+    +receiveMessage()
+}
+
+class chatController <<control>> {
+    +saveMessage()
+    +notifySuccess()
+    +notifyFailure()
+}
+
+class ChatModel <<entity>> {
+    +saveMessage()
+}
+
+codeServerChatExtenstionView "1" -- "1" chatSocket
+chatSocket "1" -- "1" chatController
+chatController "1" -- "1" ChatModel
+
+@enduml

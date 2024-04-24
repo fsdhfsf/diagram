@@ -1,0 +1,25 @@
+@startuml
+node browser1 as "Browser"
+node browser2 as "Browser"
+
+node nginx as "Nginx"
+node codeServer as "Code Server"
+database DB as "Database"
+node gitTeaServer as "GitTea Server"
+node projectManagerServer as "Project Manager Server"
+node chatSocketServer as "Socket Server"
+node folderServer as "Folder Server"
+folder worksapce as "workspace"
+
+browser1 -- nginx : << https >>
+browser2 -- nginx : << socket >>
+nginx -- codeServer : << https >>
+nginx -- projectManagerServer : << https >>
+folderServer -- projectManagerServer
+folderServerf -- worksapce
+projectManagerServer -- DB: <<tcp>>
+nginx -- chatSocketServer : <<Socket>>
+projectManagerServer -- gitTeaServer : <<https>>
+codeServer -- gitTeaServer :<<https>>
+
+@enduml

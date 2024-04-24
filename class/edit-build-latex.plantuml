@@ -1,0 +1,29 @@
+@startuml
+
+
+
+class CodeServer <<boundary>> {
+    +openTexFile()
+    +displayTexFile()
+    +editTexFile()
+    +saveTexFile()
+    +displayBuildResult()
+    +displayError()
+}
+
+class LatexWorkshop <<control>> {
+    +requestBuildLatex()
+    +displayBuildResult()
+    +displayError()
+}
+
+class LatexBuild <<entity>> {
+    +getTexFile()
+    +saveTexFile()
+    +buildLatex()
+}
+
+CodeServer "1" -- "1" LatexBuild 
+CodeServer  "1" -- "1" LatexWorkshop 
+
+@enduml

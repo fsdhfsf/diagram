@@ -1,0 +1,51 @@
+@startuml
+    actor User
+    boundary codeServerChatExtenstionView
+    control chatSocket
+    control chatController
+    entity ChatModel
+    activate User
+
+    User->> codeServerChatExtenstionView: yeu cau hien thi 
+    activate codeServerChatExtenstionView
+    codeServerChatExtenstionView->>chatSocket: ket noi
+        activate chatSocket
+    codeServerChatExtenstionView->>chatController: yeu cau message cua doan hoi thoai cu
+        deactivate codeServerChatExtenstionView
+        deactivate chatSocket
+    activate chatController
+   
+    chatController->>ChatModel: GetMessages()
+        activate ChatModel
+        deactivate chatController
+    ChatModel-->>chatController: Messages
+    activate chatController
+    deactivate ChatModel
+    chatController-->>codeServerChatExtenstionView: ShowMessages(Messages)
+        activate codeServerChatExtenstionView
+        deactivate chatController
+    codeServerChatExtenstionView->> User: hien thi
+    deactivate codeServerChatExtenstionView
+
+    alt Successful Case
+    activate ChatModel
+       ChatModel-->>chatController: Messages
+        activate chatController
+        deactivate ChatModel
+        chatController-->>codeServerChatExtenstionView: ShowMessages(Messages)
+        activate codeServerChatExtenstionView
+        deactivate chatController
+        codeServerChatExtenstionView->> User: hien thi
+        deactivate codeServerChatExtenstionView
+    else Exception Case
+        ChatModel-->>chatController: failed to get messages
+        activate chatController
+        deactivate ChatModel
+        chatController-->>codeServerChatExtenstionView: ShowError()
+        activate codeServerChatExtenstionView
+        deactivate chatController
+        codeServerChatExtenstionView->> User: hien thi loi
+        deactivate codeServerChatExtenstionView
+
+    end
+    @enduml

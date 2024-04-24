@@ -1,0 +1,51 @@
+@startuml
+
+actor User as "Người dùng"
+boundary CodeServer as "code-server"
+control LatexWorkshop as "Latex Workshop"
+entity LatexBuild as "server store and build latex file"
+
+activate User
+activate CodeServer
+User -> CodeServer: Mở file .tex
+deactivate CodeServer
+CodeServer->LatexBuild : Lấy file .tex
+deactivate CodeServer
+activate LatexBuild
+LatexBuild -> CodeServer: Trả về file .tex
+deactivate LatexBuild
+activate CodeServer
+CodeServer -> User: Hiển thị file .tex
+
+deactivate CodeServer
+User -> CodeServer: Chỉnh sửa file .tex
+activate CodeServer
+  
+CodeServer -> LatexBuild: Lưu file .tex
+deactivate CodeServer
+activate LatexBuild
+User -> CodeServer: Lưu file .tex
+activate CodeServer
+CodeServer -> LatexWorkshop: Yêu cầu xây dựng Latex
+activate LatexWorkshop
+LatexWorkshop -> LatexBuild: Xây dựng Latex
+activate LatexBuild
+
+alt Xây dựng thành công
+    LatexBuild --> LatexWorkshop: Kết quả xây dựng
+    deactivate LatexBuild
+    LatexWorkshop --> CodeServer: Hiển thị kết quả xây dựng
+    deactivate LatexWorkshop
+    CodeServer -> User: Hiển thị kết quả xây dựng
+else Xây dựng thất bại
+    LatexBuild --> LatexWorkshop: Thông báo lỗi
+    deactivate LatexBuild
+    LatexWorkshop --> CodeServer: Hiển thị lỗi
+    deactivate LatexWorkshop
+    CodeServer -> User: Hiển thị lỗi
+end
+deactivate User
+
+deactivate CodeServer
+
+@enduml

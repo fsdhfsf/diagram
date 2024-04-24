@@ -1,0 +1,60 @@
+@startuml
+
+actor User1 as "User 1"
+actor User2 as "User 2"
+boundary projectUI as "projectUI"
+control collabrationControl as "collabrationControl"
+control folderControl as "folderControl"
+boundary "gitea" as gitea
+entity collabration as "collabration"
+
+activate User1
+User1 -> projectUI: Tạo yêu cầu link mới
+activate projectUI
+projectUI -> collabrationControl: API tạo link
+activate collabrationControl
+
+alt API tạo link thành công
+    collabrationControl --> projectUI: Trả về link
+    deactivate collabrationControl
+    projectUI --> User1: Trả về link
+else API tạo link thất bại
+    activate collabrationControl
+    collabrationControl --> projectUI: Lỗi tạo link
+    deactivate collabrationControl
+    projectUI --> User1: Lỗi tạo link
+end
+deactivate collabrationControl
+
+deactivate projectUI
+User1 -> User2: gửi link
+activate User2
+User2 -> projectUI: truy cập link
+activate projectUI
+projectUI -> collabrationControl: API tạo mới workspace
+activate collabrationControl
+collabrationControl -> gitea: API collabration with admin token
+activate gitea
+
+alt API collabration thành công
+    gitea --> collabrationControl: Trả về thông tin workspace
+else API collabration thất bại
+    gitea --> collabrationControl: Lỗi collabration
+end
+deactivate gitea
+
+collabrationControl -> folderControl: Tạo folder và gửi thông tin git
+activate folderControl
+folderControl -> folderControl: clone dự án
+folderControl --> collabrationControl: Trả về thông tin workspace
+deactivate folderControl
+collabrationControl -> collabration: luu thông tin collabration
+activate collabration
+collabration --> collabrationControl: Trả về thông tin workspace
+deactivate collabration
+collabrationControl --> projectUI: Trả về thông tin workspace
+deactivate collabrationControl
+projectUI --> User2: Trả về thông tin workspace
+deactivate projectUI
+
+@enduml

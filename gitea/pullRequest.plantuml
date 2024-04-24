@@ -1,0 +1,75 @@
+@startuml
+
+actor User
+boundary codeServerGtieaExtenstionView
+control codeServerGiteaExtension
+boundary gitTeaServer
+activate User
+
+User -> codeServerGtieaExtenstionView : mở extension
+activate codeServerGtieaExtenstionView
+codeServerGtieaExtenstionView->User : hiển thị giao diện
+deactivate codeServerGtieaExtenstionView
+
+User -> codeServerGtieaExtenstionView : xem các pull request
+activate codeServerGtieaExtenstionView
+codeServerGtieaExtenstionView->> codeServerGiteaExtension : Xem pull request
+deactivate codeServerGtieaExtenstionView
+activate codeServerGiteaExtension
+codeServerGiteaExtension -> gitTeaServer : API get pull request
+deactivate codeServerGiteaExtension
+activate gitTeaServer
+alt API get pull request thành công
+gitTeaServer -> codeServerGiteaExtension : trả về list pull request
+activate codeServerGiteaExtension
+deactivate gitTeaServer
+codeServerGiteaExtension -> codeServerGtieaExtenstionView : trả về list pull request
+deactivate codeServerGiteaExtension
+activate codeServerGtieaExtenstionView
+codeServerGtieaExtenstionView->User : hiển thị list pull request
+deactivate codeServerGtieaExtenstionView
+
+loop
+User -> codeServerGtieaExtenstionView : xem pull request chi tiết
+activate codeServerGtieaExtenstionView
+codeServerGtieaExtenstionView->> codeServerGiteaExtension : Xem pull request chi tiết
+deactivate codeServerGtieaExtenstionView
+activate codeServerGiteaExtension
+codeServerGiteaExtension -> gitTeaServer : API get pull request chi tiết
+deactivate codeServerGiteaExtension
+activate gitTeaServer
+alt API get pull request chi tiết thành công
+gitTeaServer -> codeServerGiteaExtension : trả về pull request chi tiết
+activate codeServerGiteaExtension
+deactivate gitTeaServer
+codeServerGiteaExtension -> codeServerGtieaExtenstionView : trả về pull request chi tiết
+deactivate codeServerGiteaExtension
+activate codeServerGtieaExtenstionView
+codeServerGtieaExtenstionView->User : hiển thị pull request chi tiết
+deactivate codeServerGtieaExtenstionView
+
+else API get pull request chi tiết thất bại
+gitTeaServer -> codeServerGiteaExtension : trả về lỗi
+deactivate gitTeaServer
+activate codeServerGiteaExtension
+codeServerGiteaExtension -> codeServerGtieaExtenstionView : trả về lỗi
+deactivate codeServerGiteaExtension
+activate codeServerGtieaExtenstionView
+codeServerGtieaExtenstionView->User : hiển thị lỗi
+deactivate codeServerGtieaExtenstionView
+
+end
+end
+else API get pull request thất bại
+gitTeaServer -> codeServerGiteaExtension : trả về lỗi
+deactivate gitTeaServer
+activate codeServerGiteaExtension
+codeServerGiteaExtension -> codeServerGtieaExtenstionView : trả về lỗi
+deactivate codeServerGiteaExtension
+activate codeServerGtieaExtenstionView
+codeServerGtieaExtenstionView->User : hiển thị lỗi
+deactivate codeServerGtieaExtenstionView
+deactivate User
+end
+
+@enduml

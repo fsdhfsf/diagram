@@ -1,0 +1,80 @@
+@startuml
+
+actor User
+boundary codeServerGtieaExtenstionView
+control codeServerGiteaExtension
+boundary gitTeaServer
+activate User
+
+User -> codeServerGtieaExtenstionView : mở extension
+activate codeServerGtieaExtenstionView
+codeServerGtieaExtenstionView->User : hiển thị giao diện
+deactivate codeServerGtieaExtenstionView
+
+User -> codeServerGtieaExtenstionView : xem cac issue
+activate codeServerGtieaExtenstionView
+codeServerGtieaExtenstionView->> codeServerGiteaExtension : Xem issue
+deactivate codeServerGtieaExtenstionView
+activate codeServerGiteaExtension
+codeServerGiteaExtension -> gitTeaServer : API get issue
+deactivate codeServerGiteaExtension
+activate gitTeaServer
+alt API get issue thành công
+gitTeaServer -> codeServerGiteaExtension : trả về list issue
+activate codeServerGiteaExtension
+deactivate gitTeaServer
+codeServerGiteaExtension -> codeServerGtieaExtenstionView : trả về list issue
+deactivate codeServerGiteaExtension
+activate codeServerGtieaExtenstionView
+' activate gitTeaServer'
+codeServerGtieaExtenstionView->User : 4. hiển thị list issue
+deactivate codeServerGiteaExtension
+deactivate codeServerGtieaExtenstionView
+activate gitTeaServer
+
+loop
+User -> codeServerGtieaExtenstionView : xem issue chi tiết
+activate codeServerGtieaExtenstionView
+codeServerGtieaExtenstionView->> codeServerGiteaExtension : Xem issue chi tiết
+deactivate codeServerGtieaExtenstionView
+activate codeServerGiteaExtension
+codeServerGiteaExtension -> gitTeaServer : API get issue chi tiết
+deactivate codeServerGiteaExtension
+activate gitTeaServer
+alt API get issue chi tiết thành công
+gitTeaServer -> codeServerGiteaExtension : trả về issue chi tiết
+activate codeServerGiteaExtension
+deactivate gitTeaServer
+codeServerGiteaExtension -> codeServerGtieaExtenstionView : trả về issue chi tiết
+deactivate codeServerGiteaExtension
+activate codeServerGtieaExtenstionView
+codeServerGtieaExtenstionView->User : 4. hiển thị issue chi tiết
+deactivate codeServerGtieaExtenstionView
+
+else API get issue chi tiết thất bại
+gitTeaServer -> codeServerGiteaExtension : trả về lỗi
+deactivate gitTeaServer
+activate codeServerGiteaExtension
+codeServerGiteaExtension -> codeServerGtieaExtenstionView : trả về lỗi
+deactivate codeServerGiteaExtension
+activate codeServerGtieaExtenstionView
+codeServerGtieaExtenstionView->User : 4. hiển thị lỗi
+deactivate codeServerGtieaExtenstionView
+
+end
+end
+else API get issue thất bại
+gitTeaServer -> codeServerGiteaExtension : trả về lỗi
+deactivate gitTeaServer
+activate codeServerGiteaExtension
+codeServerGiteaExtension -> codeServerGtieaExtenstionView : trả về lỗi
+deactivate codeServerGiteaExtension
+activate codeServerGtieaExtenstionView
+codeServerGtieaExtenstionView->User : 4. hiển thị lỗi
+deactivate codeServerGtieaExtenstionView
+deactivate User
+end
+
+
+
+@enduml

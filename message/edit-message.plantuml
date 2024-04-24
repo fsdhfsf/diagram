@@ -1,0 +1,45 @@
+@startuml
+    Actor User
+    boundary codeServerExtenstionView
+    control chatSocket
+    control chatController
+    entity chatModel
+    activate User
+    User->>codeServerExtenstionView: Yêu cầu chỉnh sửa tin nhắn
+    activate codeServerExtenstionView
+
+    codeServerExtenstionView->>chatController: Yêu cầu chỉnh sửa tin nhắn
+    activate chatController
+    deactivate codeServerExtenstionView
+    chatController->>chatModel: ChinhSuaTinNhan()
+    deactivate chatController
+    activate chatModel
+    chatModel->>chatModel:validate()
+    chatModel->>chatModel:saveDB()
+    
+    alt Trường hợp thành công
+        chatModel-->>chatController: TinNhanDaChinhSua
+        deactivate chatModel
+        activate chatController
+        chatController-->>chatSocket: Phát tin nhắn đã chỉnh sửa
+        activate chatSocket
+        deactivate chatController
+        chatSocket-->>codeServerExtenstionView: Tin nhắn đã chỉnh sửa
+        activate codeServerExtenstionView
+        deactivate chatSocket
+        codeServerExtenstionView->>User: Hiển thị tin nhắn đã chỉnh sửa
+        deactivate codeServerExtenstionView
+    else Trường hợp lỗi: ChinhSuaTinNhan ThatBai
+        activate chatModel
+        chatModel-->>chatController: Không thể chỉnh sửa tin nhắn
+        deactivate chatModel
+        activate chatController
+        chatController-->>codeServerExtenstionView: HienThiLoi()
+        activate codeServerExtenstionView
+        deactivate chatController
+        codeServerExtenstionView->>User: Hiển thị lỗi
+        deactivate codeServerExtenstionView
+        deactivate User
+    end
+    @enduml
+    

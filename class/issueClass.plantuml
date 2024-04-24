@@ -1,0 +1,34 @@
+@startuml
+
+
+class CodeServerGtieaExtenstionView {
+    +displayInterface(): void
+    +displayIssueList(issues: Issue[]): void
+    +displayIssueDetail(issue: Issue): void
+    +displayError(message: string): void
+}
+
+class CodeServerGiteaExtension {
+    +getIssueList(): Issue[]
+    +getIssueDetail(issueId: string): Issue
+}
+
+class GitTeaServer {
+    +getIssueList(): Issue[]
+    +getIssueDetail(issueId: string): Issue
+}
+
+class Issue {
+    +id: string
+    +title: string
+    +description: string
+    +status: string
+    +assignee: string
+    +createdAt: Date
+    +updatedAt: Date
+}
+
+CodeServerGiteaExtension "1" -left- "1" CodeServerGtieaExtenstionView 
+GitTeaServer "1" -- "1" CodeServerGiteaExtension 
+
+@enduml

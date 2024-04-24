@@ -1,0 +1,48 @@
+@startuml
+
+class projectUI {
+    +createLink(): void
+    +returnLink(link: String): void
+    +returnWorkspaceInfo(info: String): void
+    +showError(message: String): void
+}
+
+class collabrationControl {
+    +createLink(): void
+    +returnLink(link: String): void
+    +showError(message: String): void
+    +createWorkspace(): void
+    +returnWorkspaceInfo(info: String): void
+}
+
+class folderControl {
+    +createFolder(): void
+    +cloneProject(): void
+}
+
+class gitea {
+    +collabrationWithAdminToken(): void
+    +returnWorkspaceInfo(info: String): void
+    +showError(message: String): void
+}
+
+class collabration {
+    - id : int
+    - name : String
+    - account_id : int
+    - project_id : int
+    - link_workspace : String
+    - role : String
+    - activate : boolean
+    - created_at : Date
+    - updated_at : Date
+    +saveCollabrationInfo(): void
+    +returnWorkspaceInfo(info: String): void
+}
+
+projectUI "1" -- "1" collabrationControl
+collabrationControl "1" -- "1" folderControl
+collabrationControl "1" -- "1" gitea
+collabrationControl "1" -- "1" collabration
+
+@enduml

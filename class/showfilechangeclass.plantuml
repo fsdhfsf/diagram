@@ -1,0 +1,23 @@
+@startuml
+
+
+class CodeServerGtieaExtenstionView {
+  +showPullRequestFileChanged(): void
+  +showFileDetails(): void
+}
+
+class CodeServerGiteaExtension {
+  +view: CodeServerGtieaExtenstionView
+  +getPullRequestFileChanged(): void
+  +getFileDetails(): void
+}
+
+class GitTeaServer {
+  +getPullRequestFileChanged(): void
+  +getFileDetails(): void
+}
+
+CodeServerGtieaExtenstionView  "1" -left- "1" CodeServerGiteaExtension
+CodeServerGiteaExtension   "1" -- "1" GitTeaServer
+
+@enduml

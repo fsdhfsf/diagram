@@ -1,0 +1,26 @@
+@startuml
+left to right direction
+actor User
+actor gitea
+rectangle Usecase {
+usecase "Add Comment" as addComment
+usecase "Edit and Build Latex" as editAndBuildLatex
+usecase "show Pull Request" as pullRequest
+usecase "Show Issue" as showIssue
+usecase "Add Message" as addMessage
+usecase "Edit Message" as editMessage
+usecase "Delete Message" as deleteMessage
+usecase "Reaction" as reaction
+}
+
+User --> addComment
+User --> editAndBuildLatex
+User --> pullRequest
+User --> showIssue
+gitea --> pullRequest
+gitea --> showIssue
+User --> addMessage
+User --> editMessage
+User --> deleteMessage
+User --> reaction
+@enduml

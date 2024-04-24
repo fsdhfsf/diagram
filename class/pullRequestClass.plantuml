@@ -1,0 +1,29 @@
+@startuml
+
+class codeServerGtieaExtenstionView {
+    + openExtension()
+    + viewPullRequestList()
+    + viewPullRequestDetail()
+    + displayPullRequestList()
+    + displayPullRequestDetail()
+    + displayError()
+}
+
+class codeServerGiteaExtension {
+    + getPullRequestList()
+    + getPullRequestDetail()
+    + displayPullRequestList()
+    + displayPullRequestDetail()
+    + displayError()
+}
+
+class gitTeaServer {
+    + getPullRequest()
+    + getPullRequestDetail()
+    + displayError()
+}
+ 
+codeServerGtieaExtenstionView "1" -down- "1" codeServerGiteaExtension 
+codeServerGiteaExtension  "1" -left- "1" gitTeaServer 
+
+@enduml

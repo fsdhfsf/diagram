@@ -1,0 +1,19 @@
+@startuml
+
+actor User1 as "User 1"
+actor User2 as "User 2"
+boundary "Code Together Extension" as Extension
+
+activate User1
+User1 -> Extension: Start collaboration session
+activate Extension
+Extension --> User1: Provide collaboration link
+deactivate Extension
+User1 -> User2: Send collaboration link
+activate User2
+User2 -> Extension: Join collaboration session via link
+activate Extension
+Extension --> User2: Grant access to session
+deactivate Extension
+
+@enduml

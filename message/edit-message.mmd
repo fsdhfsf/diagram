@@ -1,0 +1,20 @@
+sequenceDiagram
+    Actor User
+    participant codeServerExtenstionView
+    participant chatSocket
+    participant chatController
+    participant Model
+
+    User->>codeServerExtenstionView: Yêu cầu chỉnh sửa tin nhắn
+    codeServerExtenstionView->>chatController: Yêu cầu chỉnh sửa tin nhắn
+    chatController->>Model: ChinhSuaTinNhan()
+    alt Trường hợp thành công
+        Model-->>chatController: TinNhanDaChinhSua
+        chatController-->>chatSocket: Phát tin nhắn đã chỉnh sửa
+        chatSocket-->>codeServerExtenstionView: Tin nhắn đã chỉnh sửa
+        codeServerExtenstionView->>User: Hiển thị tin nhắn đã chỉnh sửa
+    else Trường hợp lỗi: ChinhSuaTinNhan ThatBai
+        Model-->>chatController: Không thể chỉnh sửa tin nhắn
+        chatController-->>codeServerExtenstionView: HienThiLoi()
+        codeServerExtenstionView->>User: Hiển thị lỗi
+    end

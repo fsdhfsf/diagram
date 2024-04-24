@@ -1,0 +1,20 @@
+sequenceDiagram
+    Actor User
+    participant codeServerExtenstionView
+    participant chatSocket
+    participant chatController
+    participant Model
+
+    User->>codeServerExtenstionView: Yêu cầu xóa tin nhắn
+    codeServerExtenstionView->>chatController: Yêu cầu xóa tin nhắn
+    chatController->>Model: XoaTinNhan()
+    alt Trường hợp thành công
+        Model-->>chatController: TinNhanDaXoa
+        chatController-->>chatSocket: Phát tin nhắn xóa
+        chatSocket-->>codeServerExtenstionView: Tin nhắn đã xóa
+        codeServerExtenstionView->>User: Hiển thị xóa tin nhắn
+    else Trường hợp lỗi: XoaTinNhan ThatBai
+        Model-->>chatController: Không thể xóa tin nhắn
+        chatController-->>codeServerExtenstionView: HienThiLoi()
+        codeServerExtenstionView->>User: Hiển thị lỗi
+    end
